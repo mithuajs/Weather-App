@@ -1,11 +1,13 @@
 
 /* ==========================================
    MITHU.DEV WEATHER APPLICATION
-   Complete JavaScript
+   Complete JavaScript - Final Fixed Version
 ========================================== */
 
+
 /* 1. API CONFIGURATION */
-const API_KEY = ""; // API Key পরে বসাবে
+
+const API_KEY = "d91e667522fd558427b5839820c92826"; // নিজের OpenWeatherMap API Key বসাবে
 
 const WEATHER_API =
     "https://api.openweathermap.org/data/2.5/weather";
@@ -15,6 +17,7 @@ const FORECAST_API =
 
 
 /* 2. DOM ELEMENTS */
+
 const themeToggle = document.getElementById("themeToggle");
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
@@ -24,6 +27,7 @@ const forecastContainer = document.getElementById("forecastContainer");
 
 
 /* 3. THEME MANAGEMENT */
+
 function loadTheme() {
     const savedTheme = localStorage.getItem("weatherTheme");
 
@@ -52,6 +56,7 @@ themeToggle.addEventListener("click", () => {
 
 
 /* 4. RECENT SEARCH HISTORY */
+
 function saveRecentSearch(city) {
     let history = JSON.parse(
         localStorage.getItem("recentSearches") || "[]"
@@ -82,7 +87,8 @@ function displayRecentSearches() {
 
     if (history.length === 0) {
         const message = document.createElement("p");
-        message.className = "text-slate-500 text-sm";
+
+        message.className = "text-sm";
         message.textContent = "No recent searches";
 
         recentSearches.appendChild(message);
@@ -92,9 +98,8 @@ function displayRecentSearches() {
     history.forEach(city => {
         const button = document.createElement("button");
 
-        button.className =
-            "recent-city bg-slate-800 border border-slate-700 rounded-full px-4 py-2 text-sm hover:border-sky-400 transition";
-
+        button.type = "button";
+        button.className = "recent-city";
         button.dataset.city = city;
         button.textContent = "📍 " + city;
 
@@ -118,14 +123,44 @@ clearHistory.addEventListener("click", () => {
     displayRecentSearches();
 });
 
-
 /* 5. WEATHER ICON */
+
 function getWeatherIcon(icon) {
-    return `https://openweathermap.org/img/wn/${icon}@2x.png`;
+    const icons = {
+        "01d": ["☀️", "sun-animation"],
+        "01n": ["🌙", "moon-animation"],
+
+        "02d": ["🌤️", "cloud-animation"],
+        "02n": ["☁️", "cloud-animation"],
+
+        "03d": ["☁️", "cloud-animation"],
+        "03n": ["☁️", "cloud-animation"],
+
+        "04d": ["☁️", "cloud-animation"],
+        "04n": ["☁️", "cloud-animation"],
+
+        "09d": ["🌧️", "rain-animation"],
+        "09n": ["🌧️", "rain-animation"],
+
+        "10d": ["🌦️", "rain-animation"],
+        "10n": ["🌧️", "rain-animation"],
+
+        "11d": ["⛈️", "rain-animation"],
+        "11n": ["⛈️", "rain-animation"],
+
+        "13d": ["❄️", "cloud-animation"],
+        "13n": ["❄️", "cloud-animation"],
+
+        "50d": ["🌫️", "cloud-animation"],
+        "50n": ["🌫️", "cloud-animation"]
+    };
+
+    return icons[icon] || ["🌤️", "cloud-animation"];
 }
 
 
 /* 6. CURRENT WEATHER */
+
 function displayWeather(data) {
     const weatherCard = document.querySelector(
         "#weatherContent > div:first-child"
@@ -135,18 +170,31 @@ function displayWeather(data) {
         "#weatherContent > div:nth-child(2) h3"
     );
 
+    const cityName = data.name.toLowerCase().includes("sylhet")
+        ? "Sylhet"
+        : data.name;
+
     weatherCard.querySelector("h3").textContent =
-        `${data.name}, ${data.sys.country}`;
+        `${cityName}, ${data.sys.country === "BD" ? "Bangladesh" : data.sys.country}`;
 
     const iconContainer = weatherCard.querySelector(".text-7xl");
+
     iconContainer.innerHTML = "";
 
-    const weatherImage = document.createElement("img");
-    weatherImage.src = getWeatherIcon(data.weather[0].icon);
-    weatherImage.alt = data.weather[0].description;
-    weatherImage.className = "w-24 h-24 mx-auto";
+    const weatherIcon = document.createElement("span");
 
-    iconContainer.appendChild(weatherImage);
+    const [emoji, animationClass] = getWeatherIcon(
+        data.weather[0].icon
+    );
+
+    weatherIcon.textContent = emoji;
+    weatherIcon.className = animationClass;
+
+    weatherIcon.style.display = "inline-block";
+    weatherIcon.style.fontSize = "80px";
+    weatherIcon.style.lineHeight = "1.3";
+
+    iconContainer.appendChild(weatherIcon);
 
     weatherCard.querySelector("h2").textContent =
         `${Math.round(data.main.temp)}°C`;
@@ -168,49 +216,126 @@ function displayWeather(data) {
 
 
 /* 7. FIVE DAY FORECAST */
+
 function displayForecast(data) {
-    const dailyForecast = data.list
-        .filter(item => item.dt_txt.includes("12:00:00"))
+    const dailyData = {};
+
+    data.list.forEach(item => {
+        const date = item.dt_txt.split(" ")[0];
+
+        if (!dailyData[date]) {
+            dailyData[date] = [];
+        }
+
+        dailyData[date].push(item);
+    });
+
+    const today = new Date().toLocaleDateString("en-CA");
+
+    const forecastDays = Object.keys(dailyData)
+        .filter(date => date > today)
         .slice(0, 5);
 
     forecastContainer.innerHTML = "";
 
-    dailyForecast.forEach((day, index) => {
-        const date = new Date(day.dt_txt);
+    forecastDays.forEach(date => {
+        const items = dailyData[date];
 
-        const dayName = date.toLocaleDateString(
-            "en-US",
-            { weekday: "short" }
+        // Find daytime forecast
+        const midday = items.find(item =>
+            item.dt_txt.includes("12:00:00")
+        ) || items[Math.floor(items.length / 2)];
+
+        // Check rain or thunderstorm
+        const rainyPeriod = items.find(item =>
+            ["09", "10", "11"].includes(
+                item.weather[0].icon.slice(0, 2)
+            )
         );
+
+        // Prefer rainy condition if available
+        const selectedWeather = rainyPeriod || midday;
+
+        const highTemp = Math.max(
+            ...items.map(item => item.main.temp_max)
+        );
+
+        const lowTemp = Math.min(
+            ...items.map(item => item.main.temp_min)
+        );
+
+        const dayName = new Date(
+            date + "T12:00:00"
+        ).toLocaleDateString("en-US", {
+            weekday: "short"
+        });
 
         const card = document.createElement("div");
 
         card.className =
             "bg-slate-800/70 border border-slate-700 rounded-2xl p-5 text-center";
 
+        // Day name
         const dayTitle = document.createElement("p");
+
         dayTitle.className = "text-slate-400";
-        dayTitle.textContent = index === 0 ? "Tomorrow" : dayName;
+        dayTitle.textContent = dayName;
 
-        const image = document.createElement("img");
-        image.src = getWeatherIcon(day.weather[0].icon);
-        image.alt = day.weather[0].description;
-        image.className = "w-16 h-16 mx-auto my-3";
+        // Date
+        const dateText = document.createElement("p");
 
+        dateText.className = "text-slate-500 text-xs mt-1";
+        dateText.textContent = date;
+
+        // Weather icon with animation
+        const icon = document.createElement("div");
+
+        icon.className = "weather-emoji";
+
+        const weatherCode = selectedWeather.weather[0].icon;
+
+        // Use daytime icon for forecast
+        const daytimeCode = weatherCode.slice(0, 2) + "d";
+
+        const [emoji, animationClass] = getWeatherIcon(
+            daytimeCode
+        );
+
+        icon.textContent = emoji;
+        icon.classList.add(animationClass);
+
+        // High temperature
         const temperature = document.createElement("h3");
+
         temperature.className = "font-bold text-xl";
         temperature.textContent =
-            `${Math.round(day.main.temp)}°C`;
+            `${Math.round(highTemp)}°C`;
 
+        // Low temperature
+        const lowTemperature = document.createElement("p");
+
+        lowTemperature.className =
+            "text-slate-400 text-sm mt-1";
+
+        lowTemperature.textContent =
+            `Low: ${Math.round(lowTemp)}°C`;
+
+        // Weather description
         const description = document.createElement("p");
+
         description.className =
             "text-slate-400 text-sm mt-2 capitalize";
-        description.textContent = day.weather[0].description;
 
+        description.textContent =
+            selectedWeather.weather[0].description;
+
+        // Add elements to card
         card.append(
             dayTitle,
-            image,
+            dateText,
+            icon,
             temperature,
+            lowTemperature,
             description
         );
 
@@ -220,6 +345,7 @@ function displayForecast(data) {
 
 
 /* 8. SEARCH WEATHER */
+
 async function searchWeather(city) {
     city = city.trim();
 
@@ -270,7 +396,9 @@ async function searchWeather(city) {
 
     } catch (error) {
         console.error("Weather Error:", error);
+
         alert(error.message || "Something went wrong!");
+
     } finally {
         searchBtn.disabled = false;
         searchBtn.textContent = "Search";
@@ -279,12 +407,14 @@ async function searchWeather(city) {
 
 
 /* 9. SEARCH BUTTON */
+
 searchBtn.addEventListener("click", () => {
     searchWeather(cityInput.value);
 });
 
 
 /* 10. ENTER KEY SEARCH */
+
 cityInput.addEventListener("keydown", event => {
     if (event.key === "Enter") {
         searchWeather(cityInput.value);
@@ -293,6 +423,7 @@ cityInput.addEventListener("keydown", event => {
 
 
 /* 11. APPLICATION INITIALIZATION */
+
 loadTheme();
 displayRecentSearches();
 

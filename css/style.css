@@ -1,5 +1,9 @@
+/* =====================================
+   MITHU.DEV WEATHER APP
+   Complete Responsive Stylesheet
+===================================== */
 
-/* MITHU.DEV Weather App */
+/* ---------- GLOBAL ---------- */
 
 * {
     margin: 0;
@@ -13,12 +17,18 @@ html {
 
 body {
     font-family: Arial, sans-serif;
-    background: #080b14;
-    color: #ffffff;
     min-height: 100vh;
+    color: #f8fafc;
+    background:
+        radial-gradient(ellipse at top left, #172554 0%, transparent 45%),
+        radial-gradient(ellipse at bottom right, #0c4a6e 0%, transparent 40%),
+        #080b14;
+    background-attachment: fixed;
+    transition: background 0.35s ease, color 0.35s ease;
 }
 
-button, input {
+button,
+input {
     font: inherit;
 }
 
@@ -31,26 +41,53 @@ button {
     color: #080b14;
 }
 
+/* ---------- APP ANIMATION ---------- */
 
-
-/* Premium Weather UI */
-
-body {
-    background:
-        radial-gradient(ellipse at top left, #172554 0%, transparent 45%),
-        radial-gradient(ellipse at bottom right, #0c4a6e 0%, transparent 40%),
-        #080b14;
-    background-attachment: fixed;
-    color: #f8fafc;
+#app {
+    animation: fadeIn 0.8s ease;
 }
 
-/* Glassmorphism Cards */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- HEADER ---------- */
+
+header {
+    animation: slideDown 0.7s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- WEATHER CARDS: DARK MODE ---------- */
+
 #weatherContent > div,
 #weatherContent > div > div {
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 #weatherContent > div:hover,
@@ -59,52 +96,146 @@ body {
     border-color: rgba(56, 189, 248, 0.5);
 }
 
-/* Search Input */
+/* ---------- SEARCH ---------- */
+
 #cityInput {
-    color: white;
+    color: #ffffff;
+    transition: all 0.3s ease;
 }
 
 #cityInput::placeholder {
     color: #94a3b8;
 }
 
-/* Search Button */
+#cityInput:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
 #searchBtn {
     transition: all 0.3s ease;
 }
 
 #searchBtn:hover {
+    transform: translateY(-2px);
     box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
 }
 
-/* Smooth Animation */
-#app {
-    animation: fadeIn 0.8s ease;
+#searchBtn:active {
+    transform: scale(0.96);
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* ---------- WEATHER ICON ---------- */
+
+#weatherContent img {
+    object-fit: contain;
+    transition: transform 0.3s ease;
 }
 
-/* Light Mode */
+/* ---------- FORECAST CARDS: DARK MODE ---------- */
+
+#forecastContainer > div {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+        145deg,
+        rgba(30, 41, 80, 0.9),
+        rgba(45, 27, 78, 0.85)
+    );
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    border-radius: 22px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.35s ease;
+}
+
+#forecastContainer > div:hover {
+    transform: translateY(-8px);
+    border-color: rgba(167, 139, 250, 0.8);
+    box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25);
+}
+
+#forecastContainer img {
+    filter: drop-shadow(0 5px 12px rgba(167, 139, 250, 0.35));
+    transition: transform 0.35s ease;
+}
+
+#forecastContainer > div:hover img {
+    transform: scale(1.15) rotate(5deg);
+}
+
+#forecastContainer h3 {
+    color: #ffffff;
+    font-size: 26px;
+}
+
+#forecastContainer p {
+    letter-spacing: 0.3px;
+}
+
+/* ---------- THEME TOGGLE ---------- */
+
+#themeToggle {
+    transition: all 0.3s ease;
+}
+
+#themeToggle:hover {
+    transform: rotate(12deg);
+}
+
+/* =====================================
+   LIGHT THEME
+===================================== */
 
 body.light-mode {
-    background: linear-gradient(135deg, #e0f2fe, #f8fafc, #dbeafe);
+    background: linear-gradient(
+        135deg,
+        #e0f2fe 0%,
+        #f8fafc 50%,
+        #dbeafe 100%
+    );
+    background-attachment: fixed;
     color: #0f172a;
 }
 
+/* Header */
+
+body.light-mode header {
+    color: #0f172a;
+}
+
+/* Main weather cards */
+
 body.light-mode #weatherContent > div,
 body.light-mode #weatherContent > div > div {
-    background: rgba(255, 255, 255, 0.75);
-    border-color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #dbeafe;
+    box-shadow: 0 12px 35px rgba(30, 64, 175, 0.08);
 }
+
+/* Main card hover */
+
+body.light-mode #weatherContent > div:hover,
+body.light-mode #weatherContent > div > div:hover {
+    border-color: #7dd3fc;
+    box-shadow: 0 15px 35px rgba(14, 165, 233, 0.12);
+}
+
+/* Text colors */
+
+body.light-mode #weatherContent h2,
+body.light-mode #weatherContent h3 {
+    color: #0f172a;
+}
+
+body.light-mode #weatherContent p,
+body.light-mode #weatherContent span {
+    color: #475569;
+}
+
+/* Search input */
 
 body.light-mode #cityInput {
     background: #ffffff;
@@ -116,9 +247,24 @@ body.light-mode #cityInput::placeholder {
     color: #64748b;
 }
 
-body.light-mode footer {
-    color: #64748b;
+body.light-mode #cityInput:focus {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
 }
+
+/* Search button */
+
+body.light-mode #searchBtn {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+body.light-mode #searchBtn:hover {
+    background: #0369a1;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+}
+
+/* Theme button */
 
 body.light-mode #themeToggle {
     background: #ffffff;
@@ -126,14 +272,47 @@ body.light-mode #themeToggle {
     border-color: #cbd5e1;
 }
 
+/* Forecast cards */
 
+body.light-mode #forecastContainer > div {
+    background: linear-gradient(
+        145deg,
+        #ffffff,
+        #eff6ff
+    );
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.1);
+}
 
-/* =================================
+body.light-mode #forecastContainer > div:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.18);
+}
+
+body.light-mode #forecastContainer h3 {
+    color: #1e3a8a;
+}
+
+body.light-mode #forecastContainer p {
+    color: #475569;
+}
+
+body.light-mode #forecastContainer img {
+    filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.15));
+}
+
+/* Footer */
+
+body.light-mode footer {
+    color: #64748b;
+}
+
+/* =====================================
    RESPONSIVE DESIGN
-================================= */
+===================================== */
 
-/* Tablet */
 @media (max-width: 768px) {
+
     #app {
         padding-left: 16px;
         padding-right: 16px;
@@ -142,16 +321,16 @@ body.light-mode #themeToggle {
     #weatherContent {
         grid-template-columns: 1fr;
     }
+
+    #forecastContainer {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
+
     header {
         margin-bottom: 32px;
-    }
-
-    #app h2 {
-        font-size: 28px;
     }
 
     #cityInput {
@@ -186,5 +365,195 @@ body.light-mode #themeToggle {
 
     #forecastContainer > div {
         padding: 12px;
+    }
+
+    #forecastContainer h3 {
+        font-size: 22px;
+    }
+}
+
+
+/* ===== WEATHER ICON FIX ===== */
+
+#forecastContainer img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 12px auto;
+    opacity: 1;
+    visibility: visible;
+    filter: none;
+}
+
+/* Dark Mode Icons */
+body:not(.light-mode) #forecastContainer img {
+    filter: drop-shadow(0 4px 10px rgba(255, 255, 255, 0.2));
+}
+
+/* Light Mode Icons */
+body.light-mode #forecastContainer img {
+    filter: drop-shadow(0 4px 8px rgba(14, 165, 233, 0.2));
+}
+
+
+/* ===== RECENT SEARCHES FIX ===== */
+
+/* Light Mode */
+body.light-mode #clearHistory {
+    color: #dc2626;
+}
+
+body.light-mode #clearHistory:hover {
+    color: #991b1b;
+}
+
+body.light-mode #recentSearches {
+    color: #1e293b;
+}
+
+body.light-mode #recentSearches p {
+    color: #475569;
+}
+
+body.light-mode #recentSearches button,
+body.light-mode #recentSearches span {
+    color: #1e40af;
+}
+
+body.light-mode section h3 {
+    color: #1e293b;
+}
+
+/* Dark Mode */
+body:not(.light-mode) #recentSearches {
+    color: #f8fafc;
+}
+
+/* CURRENT WEATHER ICON */
+#weatherContent .text-7xl img {
+    display: block;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin: auto;
+    opacity: 1;
+    visibility: visible;
+    filter: none;
+}
+
+#forecastContainer img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* WEATHER EMOJI FIX */
+
+.weather-emoji {
+    font-size: 48px;
+    line-height: 1.4;
+    margin: 12px auto;
+    display: block;
+}
+
+/* RECENT SEARCHES LIGHT MODE */
+
+.recent-city {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #475569;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.recent-city:hover {
+    border-color: #38bdf8;
+}
+
+body.light-mode .recent-city {
+    background: #ffffff;
+    color: #1e293b;
+    border-color: #cbd5e1;
+}
+
+body.light-mode .recent-city:hover {
+    background: #eff6ff;
+    color: #0369a1;
+}
+
+body.light-mode #recentSearches p {
+    color: #475569;
+}
+/* ---------- END ---------- */
+
+
+/* ☀️ SUN ANIMATION */
+.sun-animation {
+    display: inline-block;
+    animation: sunRotate 12s linear infinite, sunGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes sunRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sunGlow {
+    from {
+        filter: drop-shadow(0 0 5px #facc15);
+    }
+    to {
+        filter: drop-shadow(0 0 18px #facc15);
+    }
+}
+
+/* 🌧️ RAIN ANIMATION */
+.rain-animation {
+    display: inline-block;
+    animation: rainBounce 1s ease-in-out infinite;
+}
+
+@keyframes rainBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(6px);
+    }
+}
+
+/* 🌙 MOON ANIMATION */
+.moon-animation {
+    display: inline-block;
+    animation: moonGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes moonGlow {
+    from {
+        filter: drop-shadow(0 0 4px #c4b5fd);
+    }
+    to {
+        filter: drop-shadow(0 0 18px #a78bfa);
+    }
+}
+
+/* ☁️ CLOUD ANIMATION */
+.cloud-animation {
+    display: inline-block;
+    animation: cloudMove 3s ease-in-out infinite alternate;
+}
+
+@keyframes cloudMove {
+    from {
+        transform: translateX(-5px);
+    }
+    to {
+        transform: translateX(5px);
     }
 }
