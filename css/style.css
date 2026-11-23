@@ -1,0 +1,190 @@
+
+/* MITHU.DEV Weather App */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #080b14;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+::selection {
+    background: #38bdf8;
+    color: #080b14;
+}
+
+
+
+/* Premium Weather UI */
+
+body {
+    background:
+        radial-gradient(ellipse at top left, #172554 0%, transparent 45%),
+        radial-gradient(ellipse at bottom right, #0c4a6e 0%, transparent 40%),
+        #080b14;
+    background-attachment: fixed;
+    color: #f8fafc;
+}
+
+/* Glassmorphism Cards */
+#weatherContent > div,
+#weatherContent > div > div {
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+#weatherContent > div:hover,
+#weatherContent > div > div:hover {
+    transform: translateY(-5px);
+    border-color: rgba(56, 189, 248, 0.5);
+}
+
+/* Search Input */
+#cityInput {
+    color: white;
+}
+
+#cityInput::placeholder {
+    color: #94a3b8;
+}
+
+/* Search Button */
+#searchBtn {
+    transition: all 0.3s ease;
+}
+
+#searchBtn:hover {
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+}
+
+/* Smooth Animation */
+#app {
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Light Mode */
+
+body.light-mode {
+    background: linear-gradient(135deg, #e0f2fe, #f8fafc, #dbeafe);
+    color: #0f172a;
+}
+
+body.light-mode #weatherContent > div,
+body.light-mode #weatherContent > div > div {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: #cbd5e1;
+}
+
+body.light-mode #cityInput {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+body.light-mode #cityInput::placeholder {
+    color: #64748b;
+}
+
+body.light-mode footer {
+    color: #64748b;
+}
+
+body.light-mode #themeToggle {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+
+
+
+/* =================================
+   RESPONSIVE DESIGN
+================================= */
+
+/* Tablet */
+@media (max-width: 768px) {
+    #app {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    #weatherContent {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    header {
+        margin-bottom: 32px;
+    }
+
+    #app h2 {
+        font-size: 28px;
+    }
+
+    #cityInput {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    #searchBtn {
+        padding: 0 16px;
+        font-size: 14px;
+    }
+
+    #weatherContent {
+        gap: 16px;
+    }
+
+    #weatherContent > div:first-child {
+        padding: 24px;
+    }
+
+    #weatherContent > div:first-child h2 {
+        font-size: 48px;
+    }
+
+    #weatherContent > div:nth-child(2) > div {
+        padding: 16px;
+    }
+
+    #forecastContainer {
+        gap: 10px;
+    }
+
+    #forecastContainer > div {
+        padding: 12px;
+    }
+}
