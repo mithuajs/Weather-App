@@ -589,3 +589,53 @@ body.light-mode #recentSearches p {
 }
 
 
+/* =====================================
+   PREMIUM MOBILE DARK MODE
+===================================== */
+
+@media (max-width: 768px) {
+
+    body:not(.light-mode) {
+        background-color: #050609;
+
+        background-image:
+            radial-gradient(
+                ellipse at 0% 0%,
+                rgba(124, 58, 237, 0.20),
+                transparent 42%
+            ),
+            radial-gradient(
+                ellipse at 100% 25%,
+                rgba(37, 99, 235, 0.16),
+                transparent 40%
+            ),
+            radial-gradient(
+                ellipse at 50% 100%,
+                rgba(14, 165, 233, 0.12),
+                transparent 45%
+            ),
+            linear-gradient(
+                145deg,
+                #050609,
+                #090b14 55%,
+                #060811
+            );
+
+        background-attachment: scroll;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    body:not(.light-mode) #weatherContent > div,
+    body:not(.light-mode) #forecastContainer > div {
+        background: rgba(17, 22, 38, 0.78);
+        border: 1px solid rgba(148, 163, 184, 0.12);
+
+        box-shadow:
+            0 8px 28px rgba(0, 0, 0, 0.35),
+            0 0 18px rgba(99, 102, 241, 0.07);
+
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+}

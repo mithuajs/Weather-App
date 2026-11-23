@@ -428,3 +428,5 @@ loadTheme();
 displayRecentSearches();
 
 console.log("MITHU.DEV Weather App Initialized!");
+
+
