@@ -557,3 +557,35 @@ body.light-mode #recentSearches p {
         transform: translateX(5px);
     }
 }
+
+
+
+/* MOBILE DARK MODE VISUAL FIX */
+
+@media (max-width: 768px) {
+
+    body:not(.light-mode) {
+        background:
+            radial-gradient(
+                ellipse at top left,
+                rgba(124, 58, 237, 0.18),
+                transparent 55%
+            ),
+            radial-gradient(
+                ellipse at bottom right,
+                rgba(14, 165, 233, 0.14),
+                transparent 55%
+            ),
+            #080b14;
+        background-attachment: scroll;
+    }
+
+    body:not(.light-mode) #weatherContent > div,
+    body:not(.light-mode) #forecastContainer > div {
+        box-shadow:
+            0 8px 25px rgba(0, 0, 0, 0.25),
+            0 0 15px rgba(124, 58, 237, 0.08);
+    }
+}
+
+
