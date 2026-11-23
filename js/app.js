@@ -26,6 +26,12 @@ const clearHistory = document.getElementById("clearHistory");
 const forecastContainer = document.getElementById("forecastContainer");
 
 
+const locationNotice = document.getElementById("locationNotice");
+const locationMessage = document.getElementById("locationMessage");
+const openLocationSettings = document.getElementById("openLocationSettings");
+
+let settingsAttempted = false;
+
 /* 3. THEME MANAGEMENT */
 
 function loadTheme() {
@@ -448,27 +454,64 @@ async function getWeatherByCoordinates(lat, lon) {
 
 /* AUTOMATIC GPS ACCESS */
 
+/* AUTOMATIC GPS ACCESS + LOCATION NOTICE */
+
+function showLocationNotice(message) {
+    locationNotice.hidden = false;
+    locationMessage.textContent = message;
+}
+
+function hideLocationNotice() {
+    locationNotice.hidden = true;
+}
+
 function loadAutoLocation() {
 
     if (!navigator.geolocation) {
-        console.log("Geolocation is not supported!");
+        showLocationNotice(
+            "Your browser does not support location access. You can still search for any city."
+        );
         return;
     }
 
     navigator.geolocation.getCurrentPosition(
 
         position => {
-
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
+
+            hideLocationNotice();
+            settingsAttempted = false;
+
+            openLocationSettings.textContent = "📍 Turn On Location";
 
             getWeatherByCoordinates(lat, lon);
         },
 
         error => {
-            console.log(
-                "Location permission unavailable. City Search is still available."
-            );
+
+            if (error.code === 1) {
+                showLocationNotice(
+                    "Location permission was denied. Allow location access in your browser settings. City Search is still available."
+                );
+
+            } else if (error.code === 2) {
+                showLocationNotice(
+                    "Your device location may be turned off or unavailable. Turn on Location and try again."
+                );
+
+            } else if (error.code === 3) {
+                showLocationNotice(
+                    "Getting your location timed out. Check that Location is turned on and try again."
+                );
+
+            } else {
+                showLocationNotice(
+                    "Unable to access your location. You can still search for any city."
+                );
+            }
+
+            console.log("Geolocation Error:", error.message);
         },
 
         {
@@ -478,6 +521,44 @@ function loadAutoLocation() {
         }
     );
 }
+
+
+/* LOCATION SETTINGS BUTTON */
+
+openLocationSettings.addEventListener("click", () => {
+
+    if (settingsAttempted) {
+        openLocationSettings.disabled = true;
+        openLocationSettings.textContent = "Checking Location...";
+
+        loadAutoLocation();
+
+        setTimeout(() => {
+            openLocationSettings.disabled = false;
+
+            if (!locationNotice.hidden) {
+                openLocationSettings.textContent = "🔄 Retry Location";
+            }
+        }, 11000);
+
+        return;
+    }
+
+    settingsAttempted = true;
+
+    openLocationSettings.textContent = "🔄 Retry Location";
+
+    showLocationNotice(
+        "If Location Settings did not open, swipe down your phone's Quick Settings and turn on Location, or go to Settings → Location. Then return and tap Retry Location."
+    );
+
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (isAndroid) {
+        window.location.href =
+            "intent:#Intent;action=android.settings.LOCATION_SOURCE_SETTINGS;end";
+    }
+});
 
 /* 9. SEARCH BUTTON */
 
@@ -499,8 +580,6 @@ cityInput.addEventListener("keydown", event => {
 
 loadTheme();
 displayRecentSearches();
-
-loadAutoLocation();
 
 console.log("MITHU.DEV Weather App Initialized!");
 

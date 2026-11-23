@@ -639,3 +639,46 @@ body.light-mode #recentSearches p {
         -webkit-backdrop-filter: blur(14px);
     }
 }
+
+
+/* =====================================
+   LOCATION ACCESS NOTICE
+===================================== */
+
+#locationNotice {
+    animation: fadeIn 0.4s ease;
+}
+
+#locationMessage {
+    line-height: 1.6;
+}
+
+#openLocationSettings {
+    color: #ffffff;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.15);
+}
+
+#openLocationSettings:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 22px rgba(14, 165, 233, 0.35);
+}
+
+#openLocationSettings:active {
+    transform: scale(0.96);
+}
+
+/* Light Mode */
+
+body.light-mode #locationMessage {
+    color: #475569;
+}
+
+body.light-mode #openLocationSettings {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+body.light-mode #openLocationSettings:hover {
+    background: #0369a1;
+}
