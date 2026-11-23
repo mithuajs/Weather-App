@@ -405,6 +405,79 @@ async function searchWeather(city) {
     }
 }
 
+/* AUTO LOCATION WEATHER */
+
+async function getWeatherByCoordinates(lat, lon) {
+
+    if (!API_KEY) {
+        console.error("Weather API Key is missing!");
+        return;
+    }
+
+    const params =
+        `lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+
+    try {
+        const [weatherResponse, forecastResponse] =
+            await Promise.all([
+                fetch(`${WEATHER_API}?${params}`),
+                fetch(`${FORECAST_API}?${params}`)
+            ]);
+
+        const weatherData = await weatherResponse.json();
+        const forecastData = await forecastResponse.json();
+
+        if (!weatherResponse.ok) {
+            throw new Error(weatherData.message);
+        }
+
+        if (!forecastResponse.ok) {
+            throw new Error(forecastData.message);
+        }
+
+        displayWeather(weatherData);
+        displayForecast(forecastData);
+
+        console.log("Auto Location Weather Loaded!");
+
+    } catch (error) {
+        console.error("Location Weather Error:", error);
+    }
+}
+
+
+/* AUTOMATIC GPS ACCESS */
+
+function loadAutoLocation() {
+
+    if (!navigator.geolocation) {
+        console.log("Geolocation is not supported!");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        position => {
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            getWeatherByCoordinates(lat, lon);
+        },
+
+        error => {
+            console.log(
+                "Location permission unavailable. City Search is still available."
+            );
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 300000
+        }
+    );
+}
 
 /* 9. SEARCH BUTTON */
 
@@ -426,6 +499,8 @@ cityInput.addEventListener("keydown", event => {
 
 loadTheme();
 displayRecentSearches();
+
+loadAutoLocation();
 
 console.log("MITHU.DEV Weather App Initialized!");
 
